@@ -122,7 +122,7 @@ export default function ProductForm({
               <div className="mb-3">
                 <input
                   type="number"
-                  min={0}
+                  min={0.0}
                   placeholder="Price"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}

@@ -109,61 +109,63 @@ export default function ProductList() {
   }
 
   return (
-    <div className="container mt-5">
-      <h1 className="display-4 mb-4">Product Shop</h1>
-      {/* Filter section */}
-      <div className="mb-4 p-3 border rounded">
-        <h2 className="h5 mb-3">Filter Products</h2>
+    <div className="container-fluid mt-5">
+      <h1 className="display-4 mb-4 text-center">Product Shop</h1>
+      <div className="mb-4 p-3 border rounded bg-light">
+        {/* Filter Section */}
         <div className="row mb-3">
-          <div className="col-md-3">
+          <div className="col-12 col-md-3">
             <input
               type="number"
               min={0}
               placeholder="Min Price"
+              className="form-control"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="form-control"
             />
           </div>
-          <div className="col-md-3">
+          <div className="col-12 col-md-3">
             <input
               type="number"
               min={0}
               placeholder="Max Price"
+              className="form-control"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="form-control"
             />
           </div>
-          <div className="col-md-3">
+          <div className="col-12 col-md-3">
             <input
               type="text"
               placeholder="Category"
+              className="form-control"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="form-control"
             />
           </div>
-          <div className="col-md-3 form-check">
+          <div className="col-12 col-md-3 form-check">
             <input
               type="checkbox"
-              checked={availabilityFilter}
-              onChange={(e) => setAvailabilityFilter(e.target.checked)}
               className="form-check-input"
               id="availabilityCheck"
+              checked={availabilityFilter}
+              onChange={(e) => setAvailabilityFilter(e.target.checked)}
             />
             <label className="form-check-label" htmlFor="availabilityCheck">
               Available
             </label>
           </div>
         </div>
-        <button onClick={handleApplyFilters} className="btn btn-primary me-2">
-          Apply Filters
-        </button>
-        <button onClick={handleResetFilters} className="btn btn-secondary">
-          Reset Filters
-        </button>
+        <div className="text-center">
+          <button className="btn btn-primary me-2" onClick={handleApplyFilters}>
+            Apply Filters
+          </button>
+          <button className="btn btn-secondary" onClick={handleResetFilters}>
+            Reset Filters
+          </button>
+        </div>
       </div>
+
       <button
         onClick={() => setIsPopupOpen(true)}
         className="btn btn-success mb-4"
@@ -172,33 +174,57 @@ export default function ProductList() {
       </button>
       <div className="row">
         {filteredProducts.length === 0 ? (
-          <p className="text-muted">No products yet.</p>
+          <p className="text-muted text-center">No products yet.</p>
         ) : (
           filteredProducts.map((product) => (
-            <div key={product.id} className="col-md-4 mb-4">
-              <div className="card border">
+            <div key={product.id} className="col-12 col-sm-6 col-md-4 mb-4">
+              <div
+                className="card border border-light shadow-lg h-100"
+                style={{
+                  transition: "transform 0.3s",
+                  backgroundColor: "#f8f9fa",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
                 <div className="card-body">
-                  <h5 className="card-title">{product.name.toUpperCase()}</h5>
-                  <p className="card-text">Category: {product.category}</p>
-                  <p className="card-text">
+                  <h5 className="card-title text-title">
+                    {product.name.toUpperCase()}
+                  </h5>
+                  <p className="card-text text-secondary">
+                    Category: {product.category}
+                  </p>
+                  <p className="card-text text-muted">
                     Description: {product.description}
                   </p>
                   <p className="card-text">
-                    Available: {product.available ? "yes" : "no"}
+                    <span
+                      className={`badge ${
+                        product.available ? "bg-success" : "bg-danger"
+                      }`}
+                    >
+                      {product.available ? "Available" : "Out of Stock"}
+                    </span>
                   </p>
                 </div>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <p className="mb-0">Price: ${product.price.toFixed(2)}</p>
+                <div className="card-footer d-flex justify-content-between align-items-center bg-light">
+                  <p className="mb-0 fw-bold text-dark">
+                    Price: ${product.price.toFixed(2)}
+                  </p>
                   <div>
                     <button
                       onClick={() => handleEdit(product)}
-                      className="btn btn-warning me-2"
+                      className="btn btn-primary btn-sm me-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(product.id)}
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                     >
                       Delete
                     </button>
@@ -213,11 +239,12 @@ export default function ProductList() {
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          onConfirm={() => {
+          onDelete={() => {
             // Handle delete logic here
             handleCloseDeleteModal();
+            fetchProducts();
           }}
-          productId={productToDelete}
+          productToDelete={productToDelete}
         />
       )}
       {isPopupOpen && (

@@ -11,11 +11,13 @@ export default function DeleteConfirmationModal({
 
   const confirmDelete = async () => {
     if (productToDelete) {
+      console.log("Deleting product with ID:", productToDelete); // Log product ID
       setLoading(true);
       setError(null); // Reset error state
       try {
         await deleteProduct(productToDelete); // Call delete function with product ID
-        onDelete(); // Refresh product list after deletion
+        console.log("Product deleted successfully"); // Log success
+        await onDelete(); // Refresh product list after deletion
       } catch (err) {
         console.error("Failed to delete product", err);
         setError("Failed to delete product. Please try again.");
